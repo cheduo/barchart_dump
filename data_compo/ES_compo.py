@@ -15,10 +15,8 @@ for file in csv_files:
     try:
         # Read the CSV file
         df = pd.read_csv(file_path)
-        
         # Append to the combined DataFrame
         combined_data = pd.concat([combined_data, df], ignore_index=True)
-        
         print(f"Successfully added {file} to combined data.")
     except Exception as e:
         print(f"Error reading {file}: {str(e)}")
@@ -28,4 +26,4 @@ combined_data.drop_duplicates(subset=['Time'], inplace=True)
 combined_data.sort_values(by='Time', inplace=True)
 combined_data.reset_index(drop=True, inplace=True)
 # combined_data.head()
-combined_data.to_csv(r"C:\Users\cdsjt\data\ES_data.csv", index=False)
+combined_data.to_csv(r"C:\Users\cdsjt\data\ES.csv", index=False)
