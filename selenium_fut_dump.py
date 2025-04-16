@@ -18,9 +18,10 @@ PASSWORD = "Guru2024@"
 # name = "CLK25"
 name = "GCJ25"
 name = "HAJ25"
-
-data_range = pd.date_range(start="2010-02-01", end="2025-04-11")
-data_range = pd.date_range(start="2010-02-01", end="2024-11-11")
+name = "NQM25"
+name = "DMEM25"
+data_range = pd.date_range(start="2010-02-01", end="2025-04-15")
+# data_range = pd.date_range(start="2010-02-01", end="2024-11-11")
 
 
 def parse_arguments():

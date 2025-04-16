@@ -9,29 +9,32 @@ csv_files = [
     file
     for file in os.listdir(downloads_path)
     if file.endswith(".csv")
-    and file.startswith(
-        "znm25_intraday-nearby-1min_historical-data-download-04-08-2025"
-    )
+    and file.startswith("esm25_intraday-1min_historical-data-04-16-2025")
 ]
 combined_data = pd.DataFrame()
+# combined_data = pd.read_csv(r"C:\Users\cdsjt\data\ES1.csv")
 # Loop through each CSV file, read it, and append to the combined DataFrame
 for file in csv_files:
     file_path = os.path.join(downloads_path, file)
     try:
         # Read the CSV file
         df = pd.read_csv(file_path)
-
         # Append to the combined DataFrame
         combined_data = pd.concat([combined_data, df], ignore_index=True)
-
         print(f"Successfully added {file} to combined data.")
     except Exception as e:
         print(f"Error reading {file}: {str(e)}")
-combined_data = combined_data.dropna(subset=["Time"])
+combined_data = combined_data.dropna(subset=["Time", "Open"])
+# Add Symbol column and move it to the first position
+combined_data["Symbol"] = "ESM25"
+combined_data = combined_data.reindex(
+    columns=["Symbol"] + [col for col in combined_data.columns if col != "Symbol"]
+)
 combined_data["Time"] = pd.to_datetime(combined_data["Time"])
+base_data = pd.read_csv(r"C:\Users\cdsjt\data\ES1.csv", parse_dates=["Time"])
+combined_data = pd.concat([base_data, combined_data])
 combined_data.drop_duplicates(subset=["Time"], inplace=True)
 combined_data.sort_values(by="Time", inplace=True)
 combined_data.reset_index(drop=True, inplace=True)
 # combined_data.head()
-combined_data.to_csv(r"C:\Users\cdsjt\data\ZN.csv", index=False)
-combined_data.head()
+combined_data.to_csv(r"C:\Users\cdsjt\data\ES1.csv", index=False)
