@@ -13,9 +13,16 @@ from datetime import datetime
 import numpy as np
 
 # Credentials - ideally should be stored in environment variables
-USERNAME = "parkcora94@gmail.com"
-PASSWORD = "Guru2024@"
-name = "FXM25"
+# USERNAME = "parkcora94@gmail.com"
+# PASSWORD = "Guru2024@"
+
+USERNAME = "larry@kust.edu.cn"
+PASSWORD = "Tech2022@"
+# name = "FXM25"
+# name = "HGJ25"
+# name = "NOM25"
+# name = "SBK25"
+name = "QAM25"
 
 
 def setup_driver(headless=True):
@@ -151,24 +158,32 @@ driver = setup_driver(
     headless=False
 )  # Set to True for headless mode, False for visible browser
 wait = WebDriverWait(driver, 10)
+
 login(driver, wait)
 # start download
 time.sleep(10)
+
 navigate_to_download_page(driver, name)
 setup_form_defaults(driver, wait)
 # Download initial sample to determine optimal batch size
-download_data(start_date="2025-04-10", end_date="2025-04-17", driver=driver, wait=wait)
-# Get the most recent CSV file after the download
-most_recent_csv = get_most_recent_csv()
-df_test = pd.read_csv(most_recent_csv, parse_dates=["Time"])
-sample_per_day = df_test.groupby(df_test.Time.dt.date)["Time"].count().max()
-nday_per_bucket = int(np.floor(20000 / sample_per_day))
-print(f"nday_per_bucket : {nday_per_bucket}")
-START_DATE = "2010-02-01"
 # END_DATE = datetime.now().strftime("%Y-%m-%d")
-END_DATE = "2024-11-01"
-data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_bucket}D")
+START_DATE = "2010-02-01"
+END_DATE = datetime.now().strftime("%Y-%m-%d")
 
+if END_DATE == datetime.now().strftime("%Y-%m-%d"):
+    download_data(start_date="2025-04-10", end_date="2025-04-17", driver=driver, wait=wait)
+    time.sleep(10)
+    # Get the most recent CSV file after the download
+    most_recent_csv = get_most_recent_csv()
+    df_test = pd.read_csv(most_recent_csv, parse_dates=["Time"])
+    sample_per_day = df_test.groupby(df_test.Time.dt.date)["Time"].count().max()
+    nday_per_bucket = int(np.floor(20000 / sample_per_day))
+
+# nday_per_bucket
+nday_per_bucket = 15
+print(f"nday_per_bucket : {nday_per_bucket}")
+# END_DATE = "2024-11-01"
+data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_bucket}D")
 # Download data in chunks
 for end_date in data_range:
     # Reset form defaults for each iteration
