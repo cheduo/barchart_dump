@@ -22,7 +22,8 @@ PASSWORD = "Tech2022@"
 # name = "HGJ25"
 # name = "NOM25"
 # name = "SBK25"
-name = "QAM25"
+# name = "QAM25"
+name = "HOK25"
 
 
 def setup_driver(headless=True):
@@ -168,8 +169,9 @@ setup_form_defaults(driver, wait)
 # Download initial sample to determine optimal batch size
 # END_DATE = datetime.now().strftime("%Y-%m-%d")
 START_DATE = "2010-02-01"
-END_DATE = datetime.now().strftime("%Y-%m-%d")
-
+# END_DATE = datetime.now().strftime("%Y-%m-%d")
+# END_DATE = "2020-03-11"
+END_DATE = "2019-09-18"
 if END_DATE == datetime.now().strftime("%Y-%m-%d"):
     download_data(start_date="2025-04-10", end_date="2025-04-17", driver=driver, wait=wait)
     time.sleep(10)
@@ -178,9 +180,12 @@ if END_DATE == datetime.now().strftime("%Y-%m-%d"):
     df_test = pd.read_csv(most_recent_csv, parse_dates=["Time"])
     sample_per_day = df_test.groupby(df_test.Time.dt.date)["Time"].count().max()
     nday_per_bucket = int(np.floor(20000 / sample_per_day))
+    nday_per_bucket += 2 * nday_per_bucket // 5
+    print(f"nday_per_bucket : {nday_per_bucket}")
+
 
 # nday_per_bucket
-nday_per_bucket = 15
+nday_per_bucket = 22
 print(f"nday_per_bucket : {nday_per_bucket}")
 # END_DATE = "2024-11-01"
 data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_bucket}D")
