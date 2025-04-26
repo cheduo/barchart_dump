@@ -1,4 +1,5 @@
-from sys import argv
+import os
+import glob
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
@@ -7,28 +8,19 @@ from selenium.webdriver.common.keys import Keys
 import tempfile
 import time
 import pandas as pd
-import argparse
 from datetime import datetime
+import numpy as np
+
 
 # Credentials - ideally should be stored in environment variables
-USERNAME = "parkcora94@gmail.com"
-PASSWORD = "Guru2024@"
-name = "TQQQ"
-data_range = pd.date_range(start="2010-02-01", end="2025-04-15")
-# data_range = pd.date_range(start="2010-02-01", end="2024-11-11")
-
-
-def parse_arguments():
-    parser = argparse.ArgumentParser(description="Download data from Barchart")
-    parser.add_argument("--name", required=True, help="Symbol name (e.g., GCJ25)")
-    parser.add_argument(
-        "--start-date", required=True, help="Start date in YYYY-MM-DD format"
-    )
-    parser.add_argument(
-        "--end-date", required=True, help="End date in YYYY-MM-DD format"
-    )
-    return parser.parse_args()
-
+# USERNAME = "parkcora94@gmail.com"
+# PASSWORD = "Guru2024@"
+USERNAME = "larry@kust.edu.cn"
+PASSWORD = "Tech2022@"
+# name = "TQQQ"
+# name = "XOP"
+# name = "GDX"
+name = "COPX"
 
 def setup_driver():
     """Set up and return the WebDriver with appropriate options"""
@@ -102,13 +94,20 @@ def set_date_field(field, date_value, wait):
 
 def download_data(start_date, end_date, driver, wait):
     """Download data for a specific date range"""
+    if isinstance(start_date, str):
+        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+    if isinstance(end_date, str):
+        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+
+    start_date_str = start_date.strftime("%m/%d/%Y")
+    end_date_str = end_date.strftime("%m/%d/%Y")
     # Set start date
     start_date_input = wait.until(EC.presence_of_element_located((By.NAME, "dateFrom")))
-    set_date_field(start_date_input, start_date, wait)
+    set_date_field(start_date_input, start_date_str, wait)
 
     # Set end date
     end_date_input = wait.until(EC.presence_of_element_located((By.NAME, "dateTo")))
-    set_date_field(end_date_input, end_date, wait)
+    set_date_field(end_date_input, end_date_str, wait)
 
     # Click download button
     download_button = wait.until(
@@ -117,39 +116,64 @@ def download_data(start_date, end_date, driver, wait):
         )
     )
     download_button.click()
-
-    # Wait for download to complete
-    print(f"Downloading data for {start_date} to {end_date}...")
     time.sleep(15)
 
 
-# def main():
-# args = parse_arguments()
-# name = argv.name
-# data_range = pd.date_range(start=args.start_date, end=args.end_date)
+def get_most_recent_csv():
+    """Get the most recently created CSV file from the Downloads folder"""
+    downloads_path = r"C:\Users\cdsjt\Downloads"
+    csv_files = glob.glob(os.path.join(downloads_path, "*.csv"))
+
+    if not csv_files:
+        print("No CSV files found in Downloads folder")
+        return None
+
+    # Sort files by creation time, newest first
+    most_recent_csv = max(csv_files, key=os.path.getctime)
+    return most_recent_csv
+
 
 # Initialize driver and wait
 driver = setup_driver()
 wait = WebDriverWait(driver, 10)
-
 login(driver, wait)
+time.sleep(10)
 navigate_to_download_page(driver, name)
 
+START_DATE = "2010-02-01"
+END_DATE = datetime.now().strftime("%Y-%m-%d")
+# END_DATE = "2019-09-18"
+if END_DATE == datetime.now().strftime("%Y-%m-%d"):
+    setup_form_defaults(driver, wait)
+    download_data(
+        start_date="2025-04-10", end_date="2025-04-17", driver=driver, wait=wait
+    )
+    time.sleep(10)
+    # Get the most recent CSV file after the download
+    most_recent_csv = get_most_recent_csv()
+    df_test = pd.read_csv(most_recent_csv, parse_dates=["Time"])
+    # Drop rows where Time couldn't be parsed to datetime
+    df_test = df_test.dropna(subset=["Time", "Open"])
+    df_test["Time"] = pd.to_datetime(df_test["Time"])
+    sample_per_day = df_test.groupby(df_test.Time.dt.date)["Time"].count().max()
+    nday_per_bucket = int(np.floor(20000 / sample_per_day))
+    nday_per_bucket += 2 * nday_per_bucket // 5
+    print(f"nday_per_bucket : {nday_per_bucket}")
+
+
+# nday_per_bucket
+# nday_per_bucket = 22
+# nday_per_bucket = 71
+print(f"nday_per_bucket : {nday_per_bucket}")
+# END_DATE = "2024-11-01"
+data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_bucket}D")
 # Download data in chunks
-for i in range(1, 251):
+for end_date in data_range:
     # Reset form defaults for each iteration
     setup_form_defaults(driver, wait)
-
-    # Calculate date range for this chunk
-    start_index = 18 * i + 1
-    end_index = 18 * i - 17
-
-    # Skip if indices are out of range
-    if start_index >= len(data_range) or end_index < 0:
-        continue
-
-    start_date = data_range[-start_index].strftime("%m/%d/%Y")
-    end_date = data_range[-end_index].strftime("%m/%d/%Y")
-
+    start_date = end_date - pd.Timedelta(days=nday_per_bucket)
+    print(
+        f"Downloading data for {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}..."
+    )
     # Download data for this date range
     download_data(start_date, end_date, driver, wait)

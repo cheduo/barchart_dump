@@ -9,8 +9,9 @@ download-list:
 - FXM25 : VG1,VG,STXE,XEUR,futures-equity,price_bid_ask,EUR,10,100,10000,,50,2.7,1.3279,0.0203,Europe/Berlin,0:15:00,UTC,22:00:00,Europe/Berlin
 - SB
 - LCO : Crude Oil Brent F Jun '25 (QAM25)
-- FV : 5 year treasury bond futures
+- FV : 5 year treasury bond futures (https://www.barchart.com/futures/quotes/ZFM25/historical-download)
 - HO : ULSD NY Harbor May '25 (HOK25)
+- 
 - Iron ore, SG
 - XOP
 - GDX

@@ -23,7 +23,9 @@ PASSWORD = "Tech2022@"
 # name = "NOM25"
 # name = "SBK25"
 # name = "QAM25"
-name = "HOK25"
+# name = "HOK25"
+# name = "RBK25"
+name = "ZFM25"
 
 
 def setup_driver(headless=True):
@@ -165,15 +167,19 @@ login(driver, wait)
 time.sleep(10)
 
 navigate_to_download_page(driver, name)
-setup_form_defaults(driver, wait)
 # Download initial sample to determine optimal batch size
 # END_DATE = datetime.now().strftime("%Y-%m-%d")
 START_DATE = "2010-02-01"
 # END_DATE = datetime.now().strftime("%Y-%m-%d")
+# END_DATE = "2023-07-19"
+END_DATE = "2018-08-15"
 # END_DATE = "2020-03-11"
-END_DATE = "2019-09-18"
+# END_DATE = "2016-01-23"
 if END_DATE == datetime.now().strftime("%Y-%m-%d"):
-    download_data(start_date="2025-04-10", end_date="2025-04-17", driver=driver, wait=wait)
+    setup_form_defaults(driver, wait)
+    download_data(
+        start_date="2025-04-10", end_date="2025-04-17", driver=driver, wait=wait
+    )
     time.sleep(10)
     # Get the most recent CSV file after the download
     most_recent_csv = get_most_recent_csv()
@@ -185,7 +191,7 @@ if END_DATE == datetime.now().strftime("%Y-%m-%d"):
 
 
 # nday_per_bucket
-nday_per_bucket = 22
+nday_per_bucket = 19
 print(f"nday_per_bucket : {nday_per_bucket}")
 # END_DATE = "2024-11-01"
 data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_bucket}D")
