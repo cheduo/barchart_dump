@@ -10,7 +10,7 @@ csv_files = [
     for file in os.listdir(downloads_path)
     if file.endswith(".csv")
     and file.startswith(
-        "clk25_intraday-nearby-1min_historical-data-download-04-11-2025"
+        "zln25_intraday-nearby-1min_historical-data-download"
     )
 ]
 combined_data = pd.DataFrame()
@@ -33,5 +33,5 @@ combined_data.drop_duplicates(subset=["Time"], inplace=True)
 combined_data.sort_values(by="Time", inplace=True)
 combined_data.reset_index(drop=True, inplace=True)
 # combined_data.head()
-combined_data.to_csv(r"C:\Users\cdsjt\data\CL1.csv", index=False)
+combined_data.to_csv(r"C:\Users\cdsjt\data\BO1.csv", index=False)
 combined_data.head()

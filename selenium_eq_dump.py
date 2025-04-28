@@ -20,7 +20,10 @@ PASSWORD = "Tech2022@"
 # name = "TQQQ"
 # name = "XOP"
 # name = "GDX"
-name = "COPX"
+# name = "COPX"
+# name = "EMM"
+name = "TIP"
+
 
 def setup_driver():
     """Set up and return the WebDriver with appropriate options"""
@@ -163,9 +166,8 @@ if END_DATE == datetime.now().strftime("%Y-%m-%d"):
 
 # nday_per_bucket
 # nday_per_bucket = 22
-# nday_per_bucket = 71
+nday_per_bucket = 71
 print(f"nday_per_bucket : {nday_per_bucket}")
-# END_DATE = "2024-11-01"
 data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_bucket}D")
 # Download data in chunks
 for end_date in data_range:

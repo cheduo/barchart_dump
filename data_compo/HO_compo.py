@@ -25,7 +25,7 @@ for file in csv_files:
         print(f"Successfully added {file} to combined data.")
     except Exception as e:
         print(f"Error reading {file}: {str(e)}")
-combined_data = combined_data.dropna(subset=["Time"])
+combined_data = combined_data.dropna(subset=["Time", "Open"])
 combined_data["Time"] = pd.to_datetime(combined_data["Time"])
 combined_data.drop_duplicates(subset=["Time"], inplace=True)
 combined_data.sort_values(by="Time", inplace=True)

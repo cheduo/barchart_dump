@@ -2,7 +2,7 @@ download-list:
 - nq
 - DMEM25
 - MES1,MES,MEM,IFUS,futures-equity,price_bid_ask,USD,50,100,10000,,400,1.5,1.2928,0.0116,America/New_York,18:00:00,America/New_York,17:00:00,America/New_York
-- cl (CLK25)
+- CL (CLK25)
 - gc
 - hc
 - hg
@@ -11,7 +11,7 @@ download-list:
 - LCO : Crude Oil Brent F Jun '25 (QAM25)
 - FV : 5 year treasury bond futures (https://www.barchart.com/futures/quotes/ZFM25/historical-download)
 - HO : ULSD NY Harbor May '25 (HOK25)
-- 
 - Iron ore, SG
 - XOP
 - GDX
+- BO1 : ZLN25

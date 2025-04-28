@@ -18,16 +18,8 @@ import numpy as np
 
 USERNAME = "larry@kust.edu.cn"
 PASSWORD = "Tech2022@"
-# name = "FXM25"
-# name = "HGJ25"
-# name = "NOM25"
-# name = "SBK25"
-# name = "QAM25"
-# name = "HOK25"
-# name = "RBK25"
-# name = "ZFM25"
-# name = "ZTM25"
-name = "ZLN25"
+name = "^AUDUSD"
+
 
 def setup_driver(headless=True):
     """Set up and return the WebDriver with appropriate options"""
@@ -86,7 +78,7 @@ def setup_form_defaults(driver, wait):
         )
     )
     select = Select(frequency_dropdown)
-    select.select_by_visible_text("Intraday Nearby")
+    select.select_by_visible_text("Intraday")
 
     # Set aggregation to 1
     aggregation_input = wait.until(
@@ -94,14 +86,6 @@ def setup_form_defaults(driver, wait):
     )
     aggregation_input.clear()
     aggregation_input.send_keys("1")
-
-    # Check Total Volume and Open Interest checkbox if not already selected
-    volume_checkbox = wait.until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "label[for='bc-total-volume']"))
-    )
-    checkbox_input = driver.find_element(By.ID, "bc-total-volume")
-    if not checkbox_input.is_selected():
-        volume_checkbox.click()
 
 
 def set_date_field(field, date_value, wait):
@@ -171,8 +155,11 @@ navigate_to_download_page(driver, name)
 # Download initial sample to determine optimal batch size
 # END_DATE = datetime.now().strftime("%Y-%m-%d")
 START_DATE = "2010-02-01"
-# END_DATE = datetime.now().strftime("%Y-%m-%d")
-END_DATE = "2014-05-27"
+END_DATE = datetime.now().strftime("%Y-%m-%d")
+END_DATE = "2024-08-02"
+END_DATE = "2023-01-23"
+END_DATE = "2020-12-29"
+
 if END_DATE == datetime.now().strftime("%Y-%m-%d"):
     setup_form_defaults(driver, wait)
     download_data(
@@ -191,7 +178,7 @@ if END_DATE == datetime.now().strftime("%Y-%m-%d"):
 
 
 # nday_per_bucket
-nday_per_bucket = 30
+nday_per_bucket = 18
 print(f"nday_per_bucket : {nday_per_bucket}")
 data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_bucket}D")
 # Download data in chunks
