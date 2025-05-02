@@ -15,3 +15,11 @@ download-list:
 - XOP
 - GDX
 - BO1 : ZLN25
+- SPEM : https://www.barchart.com/etfs-funds/quotes/SPEM/overview
+- Emerging Markets ETF VIX ($VEEM)
+- oil vix
+- credit ETFs
+- HYG
+- EMB
+- CNH
+- SI

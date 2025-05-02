@@ -17,12 +17,10 @@ import numpy as np
 # PASSWORD = "Guru2024@"
 USERNAME = "larry@kust.edu.cn"
 PASSWORD = "Tech2022@"
-# name = "TQQQ"
-# name = "XOP"
-# name = "GDX"
-# name = "COPX"
-# name = "EMM"
-name = "TIP"
+# name = "TIP"
+# name = "SPEM"
+# name = "SPY"
+name = "HYG"
 
 
 def setup_driver():
@@ -145,7 +143,7 @@ navigate_to_download_page(driver, name)
 
 START_DATE = "2010-02-01"
 END_DATE = datetime.now().strftime("%Y-%m-%d")
-# END_DATE = "2019-09-18"
+# END_DATE = "2015-06-01"
 if END_DATE == datetime.now().strftime("%Y-%m-%d"):
     setup_form_defaults(driver, wait)
     download_data(
