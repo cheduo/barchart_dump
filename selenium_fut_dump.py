@@ -17,7 +17,8 @@ import numpy as np
 # PASSWORD = "Guru2024@"
 
 USERNAME = "larry@kust.edu.cn"
-PASSWORD = "Tech2022@"
+# PASSWORD = "Tech2022@"
+PASSWORD = "Guru2024@"
 # name = "FXM25"
 # name = "HGJ25"
 # name = "NOM25"
@@ -27,7 +28,9 @@ PASSWORD = "Tech2022@"
 # name = "RBK25"
 # name = "ZFM25"
 # name = "ZTM25"
-name = "ZLN25"
+# name = "ZLN25"
+# name = "SIK25"
+name = "LFK25"
 
 def setup_driver(headless=True):
     """Set up and return the WebDriver with appropriate options"""
@@ -171,8 +174,10 @@ navigate_to_download_page(driver, name)
 # Download initial sample to determine optimal batch size
 # END_DATE = datetime.now().strftime("%Y-%m-%d")
 START_DATE = "2010-02-01"
-# END_DATE = datetime.now().strftime("%Y-%m-%d")
-END_DATE = "2014-05-27"
+END_DATE = datetime.now().strftime("%Y-%m-%d")
+# END_DATE = "2014-05-27"
+# END_DATE = "2023-12-09"
+END_DATE = "2016-10-17"
 if END_DATE == datetime.now().strftime("%Y-%m-%d"):
     setup_form_defaults(driver, wait)
     download_data(
@@ -191,7 +196,8 @@ if END_DATE == datetime.now().strftime("%Y-%m-%d"):
 
 
 # nday_per_bucket
-nday_per_bucket = 30
+# nday_per_bucket = 30
+nday_per_bucket = 22
 print(f"nday_per_bucket : {nday_per_bucket}")
 data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_bucket}D")
 # Download data in chunks

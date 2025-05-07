@@ -1,5 +1,6 @@
-download-list:
-- nq
+Download-list:
+
+- NQ
 - DMEM25
 - MES1,MES,MEM,IFUS,futures-equity,price_bid_ask,USD,50,100,10000,,400,1.5,1.2928,0.0116,America/New_York,18:00:00,America/New_York,17:00:00,America/New_York
 - CL (CLK25)
@@ -23,3 +24,5 @@ download-list:
 - EMB
 - CNH
 - SI
+- SEK (which is part of dollar index)
+- QS : LFK25 (Low Sulphur Gasoil)

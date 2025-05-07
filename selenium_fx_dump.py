@@ -17,9 +17,13 @@ import numpy as np
 # PASSWORD = "Guru2024@"
 
 USERNAME = "larry@kust.edu.cn"
-PASSWORD = "Tech2022@"
+# PASSWORD = "Tech2022@"
+PASSWORD = "Guru2024@"
 # name = "^EURUSD"
-name = "^BRLUSD"
+# name = "^BRLUSD"
+# name = "^USDCNH"
+# name = "^SEKUSD"
+name = "^CADUSD"
 
 def setup_driver(headless=True):
     """Set up and return the WebDriver with appropriate options"""
@@ -156,7 +160,7 @@ navigate_to_download_page(driver, name)
 # END_DATE = datetime.now().strftime("%Y-%m-%d")
 START_DATE = "2010-02-01"
 END_DATE = datetime.now().strftime("%Y-%m-%d")
-END_DATE = "2021-09-07"
+# END_DATE = "2021-09-07"
 
 if END_DATE == datetime.now().strftime("%Y-%m-%d"):
     setup_form_defaults(driver, wait)
@@ -177,7 +181,8 @@ if END_DATE == datetime.now().strftime("%Y-%m-%d"):
 
 # nday_per_bucket
 nday_per_bucket = 18
-nday_per_bucket = 23
+# nday_per_bucket = 23
+# nday_per_bucket = 35
 print(f"nday_per_bucket : {nday_per_bucket}")
 data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_bucket}D")
 # Download data in chunks

@@ -1,5 +1,6 @@
 import os
 import glob
+from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait, Select
@@ -11,26 +12,29 @@ import pandas as pd
 from datetime import datetime
 import numpy as np
 
-
 # Credentials - ideally should be stored in environment variables
 # USERNAME = "parkcora94@gmail.com"
 # PASSWORD = "Guru2024@"
+
 USERNAME = "larry@kust.edu.cn"
 # PASSWORD = "Tech2022@"
 PASSWORD = "Guru2024@"
-# name = "TIP"
-# name = "SPEM"
-# name = "SPY"
-# name = "HYG"
-# name = "EMB"
-name = "VXX"
+name = "$OVX"
 
 
-def setup_driver():
+def setup_driver(headless=True):
     """Set up and return the WebDriver with appropriate options"""
     temp_dir = tempfile.mkdtemp()
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument(f"--user-data-dir={temp_dir}")
+
+    if headless:
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--window-size=1920,1080")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+
     return webdriver.Chrome(options=chrome_options)
 
 
@@ -49,6 +53,7 @@ def login(driver, wait):
     time.sleep(1)
     username_field.send_keys(USERNAME)
     password_field.send_keys(PASSWORD)
+
     submit_button = wait.until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "button.bc-button.login-button"))
     )
@@ -60,15 +65,13 @@ def login(driver, wait):
     print("Login successful!")
 
 
-def navigate_to_download_page(driver, name="VIJ25"):
+def navigate_to_download_page(driver, name):
     """Navigate to the price history download page"""
     driver.get(f"https://www.barchart.com/my/price-history/download/{name}")
 
 
 def setup_form_defaults(driver, wait):
     """Set up the default form values"""
-    # Clear and set up symbol input
-
     # Set frequency to Intraday Nearby
     frequency_dropdown = wait.until(
         EC.presence_of_element_located(
@@ -105,6 +108,7 @@ def download_data(start_date, end_date, driver, wait):
 
     start_date_str = start_date.strftime("%m/%d/%Y")
     end_date_str = end_date.strftime("%m/%d/%Y")
+
     # Set start date
     start_date_input = wait.until(EC.presence_of_element_located((By.NAME, "dateFrom")))
     set_date_field(start_date_input, start_date_str, wait)
@@ -120,6 +124,7 @@ def download_data(start_date, end_date, driver, wait):
         )
     )
     download_button.click()
+    # Wait for download to complete
     time.sleep(15)
 
 
@@ -137,16 +142,23 @@ def get_most_recent_csv():
     return most_recent_csv
 
 
-# Initialize driver and wait
-driver = setup_driver()
+# Initialize driver and login
+driver = setup_driver(
+    headless=False
+)  # Set to True for headless mode, False for visible browser
 wait = WebDriverWait(driver, 10)
-login(driver, wait)
-time.sleep(10)
-navigate_to_download_page(driver, name)
 
+login(driver, wait)
+# start download
+time.sleep(10)
+
+navigate_to_download_page(driver, name)
+# Download initial sample to determine optimal batch size
+# END_DATE = datetime.now().strftime("%Y-%m-%d")
 START_DATE = "2010-02-01"
 END_DATE = datetime.now().strftime("%Y-%m-%d")
-# END_DATE = "2015-06-01"
+END_DATE = "2013-04-14"
+
 if END_DATE == datetime.now().strftime("%Y-%m-%d"):
     setup_form_defaults(driver, wait)
     download_data(
@@ -156,7 +168,6 @@ if END_DATE == datetime.now().strftime("%Y-%m-%d"):
     # Get the most recent CSV file after the download
     most_recent_csv = get_most_recent_csv()
     df_test = pd.read_csv(most_recent_csv, parse_dates=["Time"])
-    # Drop rows where Time couldn't be parsed to datetime
     df_test = df_test.dropna(subset=["Time", "Open"])
     df_test["Time"] = pd.to_datetime(df_test["Time"])
     sample_per_day = df_test.groupby(df_test.Time.dt.date)["Time"].count().max()
@@ -166,7 +177,7 @@ if END_DATE == datetime.now().strftime("%Y-%m-%d"):
 
 
 # nday_per_bucket
-# nday_per_bucket = 22
+# nday_per_bucket = 18
 nday_per_bucket = 71
 print(f"nday_per_bucket : {nday_per_bucket}")
 data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_bucket}D")
@@ -174,6 +185,7 @@ data_range = pd.date_range(start=END_DATE, end=START_DATE, freq=f"{-nday_per_buc
 for end_date in data_range:
     # Reset form defaults for each iteration
     setup_form_defaults(driver, wait)
+    # Calculate start date for this chunk
     start_date = end_date - pd.Timedelta(days=nday_per_bucket)
     print(
         f"Downloading data for {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}..."
