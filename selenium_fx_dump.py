@@ -25,6 +25,7 @@ PASSWORD = "Guru2024@"
 # name = "^SEKUSD"
 name = "^CADUSD"
 
+
 def setup_driver(headless=True):
     """Set up and return the WebDriver with appropriate options"""
     temp_dir = tempfile.mkdtemp()
@@ -160,7 +161,7 @@ navigate_to_download_page(driver, name)
 # END_DATE = datetime.now().strftime("%Y-%m-%d")
 START_DATE = "2010-02-01"
 END_DATE = datetime.now().strftime("%Y-%m-%d")
-# END_DATE = "2021-09-07"
+END_DATE = "2016-11-05"
 
 if END_DATE == datetime.now().strftime("%Y-%m-%d"):
     setup_form_defaults(driver, wait)

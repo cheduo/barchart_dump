@@ -18,7 +18,7 @@ Download-list:
 - BO1 : ZLN25
 - SPEM : https://www.barchart.com/etfs-funds/quotes/SPEM/overview
 - Emerging Markets ETF VIX ($VEEM)
-- oil vix
+- Oil vix
 - credit ETFs
 - HYG
 - EMB
@@ -26,3 +26,7 @@ Download-list:
 - SI
 - SEK (which is part of dollar index)
 - QS : LFK25 (Low Sulphur Gasoil)
+- VXX : ETN
+- CADUSD
+- NG1 (NGM25)
+- TTF
